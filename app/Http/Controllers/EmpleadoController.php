@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empleado;
 use Illuminate\Http\Request;
+use Mockery\Matcher\Any;
 
 class EmpleadoController extends Controller
 {
@@ -14,7 +15,7 @@ class EmpleadoController extends Controller
      */
     public function index()
     {
-        //
+        return view('employes.index');
     }
 
     /**
@@ -24,7 +25,7 @@ class EmpleadoController extends Controller
      */
     public function create()
     {
-        //
+        return view('employes.create');
     }
 
     /**
@@ -35,7 +36,10 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datosEmpleado = request()->all();
+        $datosEmpleado = request()->except('_token');
+        Empleado::insert($datosEmpleado);
+        return response()->json($datosEmpleado);
     }
 
     /**
