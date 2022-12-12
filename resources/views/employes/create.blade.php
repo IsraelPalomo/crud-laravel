@@ -1,5 +1,5 @@
 <form action="{{url('/employe')}}" method="POST" enctype="multipart/form-data">
-    @csrf
+    @csrf 
 <label for="Name">Name</label>
 <input type="text" name="Name">
 <br>
