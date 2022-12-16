@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empleado;
 use Illuminate\Http\Request;
 use Mockery\Matcher\Any;
+use Illuminate\Support\Facades\Storage;
 
 class EmpleadoController extends Controller
 {
@@ -63,9 +64,10 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function edit(Empleado $empleado)
-    {
-        //
+    public function edit($id)
+    {   
+        $employe=Empleado::findOrFail($id);
+        return view('employes.edit', compact('employe')); 
     }
 
     /**
@@ -75,9 +77,21 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empleado $empleado)
+    public function update(Request $request,  $id)
     {
-        //
+        $datosEmpleado = request()->except('_token','_method');
+
+        if($request->hasFile('Image')){
+            $employe = Empleado::findOrFail($id);
+            Storage::delete('public/' . $employe->Image);
+            $datosEmpleado['Image'] = $request->file('Image')->store('uploads', 'public');
+        }
+
+        Empleado::where('id','=',$id)->update($datosEmpleado);
+
+         
+        return redirect('employe'); 
+
     }
 
     /**
@@ -86,8 +100,9 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Empleado $empleado)
+    public function destroy($id)
     {
-        //
+        Empleado::destroy($id);
+        return redirect('employe');
     }
 }
